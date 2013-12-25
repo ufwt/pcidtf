@@ -1,0 +1,9 @@
+#!/bin/sh
+# =================================================================
+# Copyright (C) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# This file generates an archive in tar format.
+# =================================================================
+
+git archive --format=tar --prefix=pcidtf/ -o ../pcidtf.tar master
+xz ../pcidtf.tar

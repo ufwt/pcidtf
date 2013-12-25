@@ -1,0 +1,19 @@
+# ===================================================================
+# Copyright (C) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# Makefile for GNU C compiler
+# ===================================================================
+
+DIRS	= driver
+
+all:
+	@for dir in $(DIRS); do\
+		cd $$dir; $(MAKE); cd ..;\
+	done
+
+clean:
+	@for dir in $(DIRS); do\
+		cd $$dir; $(MAKE) clean; cd ..;\
+	done
+
+install:

@@ -1,0 +1,7 @@
+# ===================================================================
+# Copyright (C) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# Build script for Windows Driver Kit
+# ===================================================================
+
+DIRS = win api testapp

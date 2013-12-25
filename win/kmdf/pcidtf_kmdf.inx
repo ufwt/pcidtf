@@ -1,0 +1,95 @@
+; ===================================================================
+; Copyright (C) 2013 Hiromitsu Sakamoto
+; PCI Device Test Framework
+; INF File for KMDF-based Driver
+; ===================================================================
+
+[Version]
+ Signature="$WINDOWS NT$"
+ Class=PCIDTF
+ ClassGuid={C5F4DB91-E855-4bf6-8C9E-C037AB1D7636}
+ Provider=%PROVIDER%
+ DriverVer=XX/XX/XXXX,X.X.X.X
+ CatalogFile=pcidtf_kmdf.cat
+
+[DestinationDirs]
+ DefaultDestDir                 = 12
+ PCIDTF.CoInstaller.CopyFiles   = 11
+
+[SourceDisksFiles]
+ pcidtf_kmdf.sys = 1
+ WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll = 1
+
+[SourceDisksNames]
+ 1 = %DISKNAME%
+
+; -------------------------------------------------------------------
+; Class Section
+; -------------------------------------------------------------------
+
+[ClassInstall32]
+ Addreg = PciDtfClassReg
+
+[PciDtfClassReg]
+ HKR,,,0,%CLASSNAME%
+ HKR,,Icon,,-5
+
+; -------------------------------------------------------------------
+; Device Installation Section
+; -------------------------------------------------------------------
+
+[Manufacturer]
+ %STDMFG% = Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+ %PCI\CC_0C0330.DeviceDesc% = PCIDTF, PCI\CC_0C0330
+
+[PCIDTF.NT]
+ CopyFiles = PCIDTF.CopyFiles
+
+[PCIDTF.CopyFiles]
+ pcidtf_kmdf.sys
+
+[PCIDTF.NT.Services]
+ AddService = pcidtf_kmdf,0x00000002,PCIDTF.AddService
+
+[PCIDTF.AddService]
+ DisplayName    = %PCIDTF.SvcDesc%
+ ServiceType    = 1         ; SERVICE_KERNEL_DRIVER
+ StartType      = 3         ; SERVICE_DEMAND_START
+ ErrorControl   = 1         ; SERVICE_ERROR_NORMAL
+ ServiceBinary  = %12%\pcidtf_kmdf.sys
+
+; -------------------------------------------------------------------
+; Coinstaller Installation Section
+; -------------------------------------------------------------------
+
+[PCIDTF.NT.CoInstallers]
+ AddReg     = PCIDTF.CoInstaller.AddReg
+ CopyFiles  = PCIDTF.CoInstaller.CopyFiles
+
+[PCIDTF.CoInstaller.CopyFiles]
+ WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[PCIDTF.CoInstaller.AddReg]
+ HKR,,CoInstallers32,0x00010000,"WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[PCIDTF.NT.Wdf]
+ KmdfService = pcidtf_kmdf, PCIDTF_wdfsect
+
+[PCIDTF_wdfsect]
+ KmdfLibraryVersion = $KMDFVERSION$
+
+; -------------------------------------------------------------------
+; String Section
+; -------------------------------------------------------------------
+
+[Strings]
+ PROVIDER       = "Hiromitsu Sakamoto"
+ STDMFG         = "(Standard system devices)"
+ CLASSNAME      = "PCI Test Framework Device"
+ DISKNAME       = "PCI Device Test Framework Driver Install Disk (KMDF)"
+ PCIDTF.SvcDesc = "PCI Device Test Framework Driver (KMDF)"
+
+; Device description strings
+ PCI\CC_0C0330.DeviceDesc = "PCI Test Framework Device (KMDF) - USB eXtensible Host Controller"

@@ -1,0 +1,18 @@
+# ===================================================================
+# Copyright (C) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# Build script for kernel-mode common library.
+# ===================================================================
+
+TARGETNAME  = pcidtf_common
+TARGETTYPE  = DRIVER_LIBRARY
+
+INCLUDES    = ..\include;..\..\include;..\..\..\miscutil\include
+
+SOURCES = common.c
+
+MSC_WARNING_LEVEL   = /W4 /WX
+
+PRECOMPILED_INCLUDE = precomp.h
+PRECOMPILED_PCH     = precomp.pch
+PRECOMPILED_OBJ     = precomp.obj

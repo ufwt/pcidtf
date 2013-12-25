@@ -1,0 +1,31 @@
+# ===================================================================
+# Copyright (c) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# Makefile for GNU C compiler
+# ===================================================================
+
+CC	= gcc
+LD	= gcc
+AR	= ar
+
+CFLAGS	= -Wall -I../include -I../../miscutil/include
+
+SRCS	=\
+	api.c\
+	iomap.c\
+	dma.c
+
+OBJS	= $(SRCS:.c=.o)
+
+TARGET	= libpcidtf.a
+
+all:	$(TARGET)
+
+.c.o:
+	$(CC) -c $(CFLAGS) -o $*.o $<
+
+$(TARGET):	$(OBJS)
+	$(AR) rsv $@ $(OBJS)
+
+clean:
+	rm -f $(OBJS) $(TARGET) *~

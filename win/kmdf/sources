@@ -1,0 +1,36 @@
+# ===================================================================
+# Copyright (C) 2013 Hiromitsu Sakamoto
+# PCI Device Test Framework
+# Build script for KMDF-based kernel-mode driver.
+# ===================================================================
+
+!include "..\..\include\version.inc"
+
+TARGETNAME  = pcidtf_kmdf
+TARGETTYPE  = DRIVER
+
+KMDF_VERSION_MAJOR  = 1
+
+INCLUDES    = ..\include;..\..\include;..\..\..\miscutil\include
+
+C_DEFINES   = $(C_DEFINES) $(VERINFO)
+
+TARGETLIBS  =\
+        ..\common\obj$(BUILD_ALT_DIR)\*\pcidtf_common.lib\
+        ..\..\..\miscutil\lib\xpcf\win_kernel\obj$(BUILD_ALT_DIR)\*\xpcf.lib\
+        ..\..\..\miscutil\lib\win\drvutil\obj$(BUILD_ALT_DIR)\*\drvutil.lib
+
+NTTARGETFILE1   = $(OBJ_PATH)\$(O)\$(TARGETNAME).inf
+
+MSC_WARNING_LEVEL   = /W4 /WX
+
+SOURCES =\
+        kmdf.rc\
+        driver.c\
+        device.c\
+        queue.c\
+        regspace.c\
+
+PRECOMPILED_INCLUDE = precomp.h
+PRECOMPILED_PCH     = precomp.pch
+PRECOMPILED_OBJ     = precomp.obj

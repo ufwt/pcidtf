@@ -1,0 +1,9 @@
+; ===================================================================
+; Copyright (C) 2013 Hiromitsu Sakamoto
+; PCI Device Test Framework
+; Definition file for the Windows user-mode DLL
+; ===================================================================
+
+LIBRARY pcidtf.dll
+
+EXPORTS
