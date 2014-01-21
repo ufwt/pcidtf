@@ -5,6 +5,18 @@ PCI Device Test Framework (PCIDTF) is a set of kernel-mode drivers and
 user-mode library that can be used to write test application programs
 for various types of PCI bus devices (including PCI express).
 
+The framework provides the following functions to applications:
+
+- Enumeration of target PCI devices.
+
+- Read/write access of PCI configuration space.
+
+- Read/write access of I/O registers, either port I/O or memory-mapped
+  I/O.
+
+- Management and read/write access of system memory buffers for DMA
+  operation.
+
 Requirements
 ------------
 
@@ -28,4 +40,4 @@ PCIDTF can be used for the following platforms:
      Driver Kit for Windows 7.
 
 ----
-Copyright (C) 2013 Hiromitsu Sakamoto
+Copyright (C) 2013-2014 Hiromitsu Sakamoto

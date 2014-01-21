@@ -3,7 +3,7 @@
  * Windows kernel-mode driver (WDM)
  * This file implements I/O control functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -29,93 +29,81 @@
 // Local function prototypes
 //
 
-NTSTATUS PciDtfGetInfo(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetInfo(IN BASE_FILE * File, IN PIRP Irp,
 		       IN PIO_STACK_LOCATION IrpStack);
-NTSTATUS PciDtfReadWriteCfg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteCfg(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read);
-NTSTATUS PciDtfGetReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetReg(IN BASE_FILE * File, IN PIRP Irp,
 		      IN PIO_STACK_LOCATION IrpStack);
-NTSTATUS PciDtfAllocDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfAllocDma(IN BASE_FILE * File, IN PIRP Irp,
 			IN PIO_STACK_LOCATION IrpStack);
-NTSTATUS PciDtfFreeDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfFreeDma(IN BASE_FILE * File, IN PIRP Irp,
 		       IN PIO_STACK_LOCATION IrpStack);
-NTSTATUS PciDtfReadWriteReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteReg(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read);
-NTSTATUS PciDtfReadWriteDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteDma(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read);
-NTSTATUS PciDtfGetDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetDma(IN BASE_FILE * File, IN PIRP Irp,
 		      IN PIO_STACK_LOCATION IrpStack);
 
-NTSTATUS DriverDispatchOpenClose(__in PDEVICE_OBJECT DeviceObject,
-				 __inout PIRP Irp)
+NTSTATUS PciDtfFileIoctl(__in BASE_FILE * File, __in PIRP Irp,
+			 __in PIO_STACK_LOCATION IrpStack)
 {
-	UNREFERENCED_PARAMETER(DeviceObject);
-
-	Irp->IoStatus.Status = STATUS_SUCCESS;
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
-	return STATUS_SUCCESS;
-}
-
-NTSTATUS DriverDispatchDeviceControl(__in PDEVICE_OBJECT DeviceObject,
-				     __inout PIRP Irp)
-{
-	PDEVICE_DATA DeviceData = (PDEVICE_DATA) DeviceObject->DeviceExtension;
-	PIO_STACK_LOCATION IrpStack = IoGetCurrentIrpStackLocation(Irp);
 	NTSTATUS Status;
 
 	switch (IrpStack->Parameters.DeviceIoControl.IoControlCode) {
 
 	case IOCTL_PCIDTF_GET_INFO:
-		Status = PciDtfGetInfo(DeviceData, Irp, IrpStack);
+		Status = PciDtfGetInfo(File, Irp, IrpStack);
 		break;
 
 	case IOCTL_PCIDTF_READ_CFG:
-		Status = PciDtfReadWriteCfg(DeviceData, Irp, IrpStack, TRUE);
+		Status = PciDtfReadWriteCfg(File, Irp, IrpStack, TRUE);
 		break;
 
 	case IOCTL_PCIDTF_WRITE_CFG:
-		Status = PciDtfReadWriteCfg(DeviceData, Irp, IrpStack, FALSE);
+		Status = PciDtfReadWriteCfg(File, Irp, IrpStack, FALSE);
 		break;
 
 	case IOCTL_PCIDTF_GET_REG:
-		Status = PciDtfGetReg(DeviceData, Irp, IrpStack);
+		Status = PciDtfGetReg(File, Irp, IrpStack);
 		break;
 
 	case IOCTL_PCIDTF_READ_REG:
-		Status = PciDtfReadWriteReg(DeviceData, Irp, IrpStack, TRUE);
+		Status = PciDtfReadWriteReg(File, Irp, IrpStack, TRUE);
 		break;
 
 	case IOCTL_PCIDTF_WRITE_REG:
-		Status = PciDtfReadWriteReg(DeviceData, Irp, IrpStack, FALSE);
+		Status = PciDtfReadWriteReg(File, Irp, IrpStack, FALSE);
 		break;
 
 	case IOCTL_PCIDTF_ALLOC_DMA:
-		Status = PciDtfAllocDma(DeviceData, Irp, IrpStack);
+		Status = PciDtfAllocDma(File, Irp, IrpStack);
 		break;
 
 	case IOCTL_PCIDTF_FREE_DMA:
-		Status = PciDtfFreeDma(DeviceData, Irp, IrpStack);
+		Status = PciDtfFreeDma(File, Irp, IrpStack);
 		break;
 
 	case IOCTL_PCIDTF_READ_DMA:
-		Status = PciDtfReadWriteDma(DeviceData, Irp, IrpStack, TRUE);
+		Status = PciDtfReadWriteDma(File, Irp, IrpStack, TRUE);
 		break;
 
 	case IOCTL_PCIDTF_WRITE_DMA:
-		Status = PciDtfReadWriteDma(DeviceData, Irp, IrpStack, FALSE);
+		Status = PciDtfReadWriteDma(File, Irp, IrpStack, FALSE);
 		break;
 
 	case IOCTL_PCIDTF_GET_DMA_INFO:
-		Status = PciDtfGetDma(DeviceData, Irp, IrpStack);
+		Status = PciDtfGetDma(File, Irp, IrpStack);
 		break;
 
 	default:
 		TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_DEFAULT,
 			  "Unsupported I/O control code 0x%X\n",
 			  IrpStack->Parameters.DeviceIoControl.IoControlCode);
-		Status = STATUS_INVALID_DEVICE_REQUEST;
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		Status =
+		    BaseFileCompleteRequest(File, Irp,
+					    STATUS_INVALID_DEVICE_REQUEST);
 		break;
 	}
 	return Status;
@@ -123,22 +111,30 @@ NTSTATUS DriverDispatchDeviceControl(__in PDEVICE_OBJECT DeviceObject,
 
 // Implement local functions
 
-NTSTATUS PciDtfGetInfo(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetInfo(IN BASE_FILE * File, IN PIRP Irp,
 		       IN PIO_STACK_LOCATION IrpStack)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
+	PDEVICE_OBJECT PhysicalDeviceObject =
+	    BaseDeviceGetPhysicalDeviceObject(Device);
 	PCIDTF_DEV_INFO *ReqData;
 	ULONG Value, Length;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.OutputBufferLength !=
-		    sizeof(PCIDTF_DEV_INFO)) {
+		if (OutputBufferLength != sizeof(PCIDTF_DEV_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid output buffer length=%u\n",
+				  OutputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
 		ReqData = (PCIDTF_DEV_INFO *) Irp->AssociatedIrp.SystemBuffer;
 
-		Status = IoGetDeviceProperty(DeviceData->PhysicalDeviceObject,
+		Status = IoGetDeviceProperty(PhysicalDeviceObject,
 					     DevicePropertyBusNumber,
 					     sizeof(Value), &Value, &Length);
 		if (!NT_SUCCESS(Status)) {
@@ -149,7 +145,7 @@ NTSTATUS PciDtfGetInfo(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		}
 		ReqData->bus = (UINT8) Value;
 
-		Status = IoGetDeviceProperty(DeviceData->PhysicalDeviceObject,
+		Status = IoGetDeviceProperty(PhysicalDeviceObject,
 					     DevicePropertyAddress,
 					     sizeof(Value), &Value, &Length);
 		if (!NT_SUCCESS(Status)) {
@@ -164,29 +160,37 @@ NTSTATUS PciDtfGetInfo(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		Irp->IoStatus.Information = sizeof(PCIDTF_DEV_INFO);
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfReadWriteCfg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteCfg(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_CFG_DATA *ReqData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_CFG_DATA)) {
+		if (InputBufferLength != sizeof(PCIDTF_CFG_DATA)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
 		ReqData = (PCIDTF_CFG_DATA *) Irp->AssociatedIrp.SystemBuffer;
 		if (Read) {
-			if (IrpStack->Parameters.
-			    DeviceIoControl.OutputBufferLength !=
-			    sizeof(PCIDTF_CFG_DATA)) {
+			if (OutputBufferLength != sizeof(PCIDTF_CFG_DATA)) {
+				TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+					  "Invalid output buffer length=%u\n",
+					  OutputBufferLength);
 				Status = STATUS_INVALID_BUFFER_SIZE;
 				__leave;
 			}
@@ -204,27 +208,36 @@ NTSTATUS PciDtfReadWriteCfg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		}
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfGetReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetReg(IN BASE_FILE * File, IN PIRP Irp,
 		      IN PIO_STACK_LOCATION IrpStack)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_REG_INFO *ReqData;
 	PREG_SPACE_DATA RegSpaceData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_REG_INFO)) {
+		if (InputBufferLength != sizeof(PCIDTF_REG_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
-		if (IrpStack->Parameters.DeviceIoControl.OutputBufferLength !=
-		    sizeof(PCIDTF_REG_INFO)) {
+		if (OutputBufferLength != sizeof(PCIDTF_REG_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid output buffer length=%u\n",
+				  OutputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
@@ -248,22 +261,29 @@ NTSTATUS PciDtfGetReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		Irp->IoStatus.Information = sizeof(PCIDTF_REG_INFO);
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfReadWriteReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteReg(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_REG_DATA *ReqData;
 	PREG_SPACE_DATA RegSpaceData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_REG_DATA)) {
+		if (InputBufferLength != sizeof(PCIDTF_REG_DATA)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
@@ -275,9 +295,10 @@ NTSTATUS PciDtfReadWriteReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		}
 		RegSpaceData = DeviceData->RegSpaceData + ReqData->bar;
 		if (Read) {
-			if (IrpStack->Parameters.
-			    DeviceIoControl.OutputBufferLength !=
-			    sizeof(PCIDTF_REG_DATA)) {
+			if (OutputBufferLength != sizeof(PCIDTF_REG_DATA)) {
+				TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+					  "Invalid output buffer length=%u\n",
+					  OutputBufferLength);
 				Status = STATUS_INVALID_BUFFER_SIZE;
 				__leave;
 			}
@@ -295,55 +316,69 @@ NTSTATUS PciDtfReadWriteReg(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		}
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfAllocDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfAllocDma(IN BASE_FILE * File, IN PIRP Irp,
 			IN PIO_STACK_LOCATION IrpStack)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_DMA_INFO *ReqData;
-	PCOMMON_BUFFER_DATA CommonBufferData;
+	PCOMMON_BUFFER_DATA BufData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_DMA_INFO)) {
+		if (InputBufferLength != sizeof(PCIDTF_DMA_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
-		if (IrpStack->Parameters.DeviceIoControl.OutputBufferLength !=
-		    sizeof(PCIDTF_DMA_INFO)) {
+		if (OutputBufferLength != sizeof(PCIDTF_DMA_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid output buffer length=%u\n",
+				  OutputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
 		ReqData = (PCIDTF_DMA_INFO *) Irp->AssociatedIrp.SystemBuffer;
 		Status = PciDtfDmaCreate(DeviceData, ReqData->len,
-					 &CommonBufferData, &ReqData->id);
+					 &BufData, &ReqData->id);
 		if (!NT_SUCCESS(Status)) {
 			__leave;
 		}
-		ReqData->addr = CommonBufferData->PhysicalAddress.QuadPart;
+		ReqData->addr = BufData->PhysicalAddress.QuadPart;
 		Irp->IoStatus.Information = sizeof(PCIDTF_DMA_INFO);
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfFreeDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfFreeDma(IN BASE_FILE * File, IN PIRP Irp,
 		       IN PIO_STACK_LOCATION IrpStack)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	int id;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(int)) {
+		if (InputBufferLength != sizeof(int)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
@@ -356,77 +391,99 @@ NTSTATUS PciDtfFreeDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
 		}
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfReadWriteDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfReadWriteDma(IN BASE_FILE * File, IN PIRP Irp,
 			    IN PIO_STACK_LOCATION IrpStack, IN BOOLEAN Read)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_DMA_DATA *ReqData;
-	PCOMMON_BUFFER_DATA CommonBufferData;
+	PCOMMON_BUFFER_DATA BufData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_DMA_DATA)) {
+		if (InputBufferLength != sizeof(PCIDTF_DMA_DATA)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
+			Status = STATUS_INVALID_BUFFER_SIZE;
+			__leave;
+		}
+		if (Read && OutputBufferLength != sizeof(PCIDTF_DMA_DATA)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid output buffer length=%u\n",
+				  OutputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
 		ReqData = (PCIDTF_DMA_DATA *) Irp->AssociatedIrp.SystemBuffer;
-		CommonBufferData = (PCOMMON_BUFFER_DATA)
+		BufData = (PCOMMON_BUFFER_DATA)
 		    xpcf_collection_get(&DeviceData->CommonBuffers,
 					ReqData->id);
-		if (CommonBufferData == NULL) {
+		if (BufData == NULL) {
 			Status = STATUS_INVALID_PARAMETER;
 			__leave;
 		}
 		Status = PciDtfDmaReadWrite(ReqData,
-					    CommonBufferData->VirtualAddress,
-					    CommonBufferData->Length, Read);
+					    BufData->VirtualAddress,
+					    BufData->Length, Read);
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }
 
-NTSTATUS PciDtfGetDma(IN PDEVICE_DATA DeviceData, IN PIRP Irp,
+NTSTATUS PciDtfGetDma(IN BASE_FILE * File, IN PIRP Irp,
 		      IN PIO_STACK_LOCATION IrpStack)
 {
+	BASE_DEVICE *Device = BaseFileGetDevice(File);
+	PDEVICE_DATA DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 	PCIDTF_DMA_INFO *ReqData;
-	PCOMMON_BUFFER_DATA CommonBufferData;
+	PCOMMON_BUFFER_DATA BufData;
+	ULONG InputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	ULONG OutputBufferLength =
+	    IrpStack->Parameters.DeviceIoControl.OutputBufferLength;
 	NTSTATUS Status = STATUS_SUCCESS;
 
 	__try {
-		if (IrpStack->Parameters.DeviceIoControl.InputBufferLength !=
-		    sizeof(PCIDTF_DMA_INFO)) {
+		if (InputBufferLength != sizeof(PCIDTF_DMA_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid input buffer length=%u\n",
+				  InputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
-		if (IrpStack->Parameters.DeviceIoControl.OutputBufferLength !=
-		    sizeof(PCIDTF_DMA_INFO)) {
+		if (OutputBufferLength != sizeof(PCIDTF_DMA_INFO)) {
+			TRACE_MSG(TRACE_LEVEL_ERROR, TRACE_FLAG_IOCTL,
+				  "Invalid output buffer length=%u\n",
+				  OutputBufferLength);
 			Status = STATUS_INVALID_BUFFER_SIZE;
 			__leave;
 		}
 		ReqData = (PCIDTF_DMA_INFO *) Irp->AssociatedIrp.SystemBuffer;
-		CommonBufferData = (PCOMMON_BUFFER_DATA)
+		BufData = (PCOMMON_BUFFER_DATA)
 		    xpcf_collection_get(&DeviceData->CommonBuffers,
 					ReqData->id);
-		if (CommonBufferData == NULL) {
+		if (BufData == NULL) {
 			Status = STATUS_INVALID_PARAMETER;
 			__leave;
 		}
-		ReqData->addr = CommonBufferData->PhysicalAddress.QuadPart;
-		ReqData->len = CommonBufferData->Length;
+		ReqData->addr = BufData->PhysicalAddress.QuadPart;
+		ReqData->len = BufData->Length;
 		Irp->IoStatus.Information = sizeof(PCIDTF_DMA_INFO);
 	}
 	__finally {
-		Irp->IoStatus.Status = Status;
-		IoCompleteRequest(Irp, IO_NO_INCREMENT);
+		BaseFileCompleteRequest(File, Irp, Status);
 	}
 	return Status;
 }

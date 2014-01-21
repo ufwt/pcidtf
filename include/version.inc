@@ -1,5 +1,5 @@
 # ===================================================================
-# Copyright (C) 2013 Hiromitsu Sakamoto
+# Copyright (C) 2013-2014 Hiromitsu Sakamoto
 # PCI Device Test Framework
 # Version information
 # ===================================================================
@@ -7,7 +7,7 @@
 MAJOR       = 1
 MINOR       = 0
 BUILD       = 0
-BUILD_QFE   = 0
+BUILD_QFE   = 1
 
 VERINFO=\
     -DPRODUCT_MAJOR_VERSION=$(MAJOR)\

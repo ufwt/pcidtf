@@ -3,7 +3,7 @@
  * Windows kernel-mode driver (WDM)
  * This file implements driver level functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,106 +25,66 @@
 #include "pcidtf_wdm.h"
 
 DECLARE_MOD_INFO("pcidtf_wdm", TRACE_LEVEL_INFO,
-		 TRACE_FLAG_DEFAULT | TRACE_FLAG_DRIVER | TRACE_FLAG_PNP |
-		 TRACE_FLAG_POWER | TRACE_FLAG_WMI | TRACE_FLAG_IOCTL |
-		 TRACE_FLAG_DMA);
+		 TRACE_FLAG_DEFAULT | TRACE_FLAG_DRIVER | TRACE_FLAG_DEVICE |
+		 TRACE_FLAG_IOCTL | TRACE_FLAG_DMA);
 
 DRIVER_INITIALIZE DriverEntry;
-DRIVER_UNLOAD DriverUnload;
-DRIVER_ADD_DEVICE DriverAddDevice;
+BASE_DRIVER_ADD_DEVICE PciDtfDriverAddDevice;
 
 #ifdef ALLOC_PRAGMA
 #pragma alloc_text(INIT, DriverEntry)
-#pragma alloc_text(PAGE, DriverUnload)
-#pragma alloc_text(PAGE, DriverAddDevice)
+#pragma alloc_text(PAGE, PciDtfDriverAddDevice)
 #endif
 
 NTSTATUS DriverEntry(__in PDRIVER_OBJECT DriverObject,
 		     __in PUNICODE_STRING RegistryPath)
 {
-	NTSTATUS Status = STATUS_SUCCESS;
+	BASE_DRIVER *Driver;
+	BASE_DRIVER_PARAMS Params;
+	NTSTATUS Status;
 
-	UNREFERENCED_PARAMETER(RegistryPath);
+	RtlZeroMemory(&Params, sizeof(Params));
+	Params.AddDevice = PciDtfDriverAddDevice;
 
-	DriverObject->DriverUnload = DriverUnload;
-	DriverObject->DriverExtension->AddDevice = DriverAddDevice;
-	DriverObject->MajorFunction[IRP_MJ_PNP] = DriverDispatchPnp;
-	DriverObject->MajorFunction[IRP_MJ_POWER] = DriverDispatchPower;
-	DriverObject->MajorFunction[IRP_MJ_SYSTEM_CONTROL] =
-	    DriverDispatchSystemControl;
-	DriverObject->MajorFunction[IRP_MJ_CREATE] = DriverDispatchOpenClose;
-	DriverObject->MajorFunction[IRP_MJ_CLOSE] = DriverDispatchOpenClose;
-	DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] =
-	    DriverDispatchDeviceControl;
-
-	TRACE_MSG(TRACE_LEVEL_INFO, TRACE_FLAG_DRIVER, "Driver initialized\n");
-
+	Status = BaseDriverCreate(DriverObject, RegistryPath, &Params, &Driver);
+	if (!NT_SUCCESS(Status)) {
+		TRACE_ERR("BaseDriverCreate", Status);
+	} else {
+		TRACE_MSG(TRACE_LEVEL_INFO, TRACE_FLAG_DRIVER,
+			  "Driver initialized\n");
+	}
 	return Status;
 }
 
-VOID DriverUnload(__in PDRIVER_OBJECT DriverObject)
+NTSTATUS PciDtfDriverAddDevice(__in BASE_DRIVER * Driver,
+			       __in PDEVICE_OBJECT
+			       PhysicalDeviceObject,
+			       __out BASE_DEVICE ** ppDevice)
 {
-	PAGED_CODE();
+	BASE_DEVICE *Device;
+	BASE_DEVICE_PARAMS Params;
+	PDEVICE_DATA DeviceData;
+	NTSTATUS Status;
 
-	UNREFERENCED_PARAMETER(DriverObject);
+	RtlZeroMemory(&Params, sizeof(Params));
+	Params.PrivateAreaSize = sizeof(DEVICE_DATA);
+	Params.PhysicalDeviceObject = PhysicalDeviceObject;
+	Params.InterfaceClassGuid = &GUID_PCIDTF_DEVICE_INTERFACE_CLASS;
+	Params.Open = PciDtfDeviceOpen;
+	Params.Start = PciDtfDeviceStart;
+	Params.Remove = PciDtfDeviceRemove;
 
-	TRACE_MSG(TRACE_LEVEL_INFO, TRACE_FLAG_DRIVER, "Driver unloaded\n");
-}
-
-NTSTATUS DriverAddDevice(__in PDRIVER_OBJECT DriverObject,
-			 __in PDEVICE_OBJECT PhysicalDeviceObject)
-{
-	PDEVICE_OBJECT DeviceObject = NULL;
-	PDEVICE_DATA DeviceData = NULL;
-	NTSTATUS Status = STATUS_SUCCESS;
-
-	PAGED_CODE();
-
-	__try {
-		Status = IoCreateDevice(DriverObject, sizeof(DEVICE_DATA),
-					NULL, FILE_DEVICE_UNKNOWN, 0, FALSE,
-					&DeviceObject);
-		if (!NT_SUCCESS(Status)) {
-			TRACE_ERR("IoCreateDevice", Status);
-			__leave;
-		}
-
-		DeviceData = (PDEVICE_DATA) DeviceObject->DeviceExtension;
-		RtlZeroMemory(DeviceData, sizeof(DEVICE_DATA));
-
+	Status = BaseDeviceCreate(Driver, &Params, &Device);
+	if (!NT_SUCCESS(Status)) {
+		TRACE_ERR("BaseDeviceCreate", Status);
+	} else {
+		DeviceData = (PDEVICE_DATA) BaseDeviceGetPrivate(Device);
 		xpcf_collection_init(&DeviceData->CommonBuffers,
 				     DEFAULT_NUM_COMMON_BUFS, 1);
 		DeviceData->CommonBuffers.ctx = DeviceData;
-
-		Status = IoRegisterDeviceInterface(PhysicalDeviceObject,
-						   &GUID_PCIDTF_DEVICE_INTERFACE_CLASS,
-						   NULL,
-						   &DeviceData->SymbolicLinkName);
-		if (!NT_SUCCESS(Status)) {
-			TRACE_ERR("IoRegisterDeviceInterface", Status);
-			__leave;
-		}
-
-		DeviceData->NextDeviceObject =
-		    IoAttachDeviceToDeviceStack(DeviceObject,
-						PhysicalDeviceObject);
-		if (DeviceData->NextDeviceObject == NULL) {
-			Status = STATUS_NO_SUCH_DEVICE;
-			TRACE_ERR("IoAttachDeviceToDeviceStack", Status);
-			__leave;
-		}
-		// Save PDO
-		DeviceData->PhysicalDeviceObject = PhysicalDeviceObject;
-
-		TRACE_MSG(TRACE_LEVEL_INFO, TRACE_FLAG_PNP,
-			  "Device 0x%p added\n", DeviceObject);
-	}
-	__finally {
-		if (!NT_SUCCESS(Status) && DeviceObject != NULL) {
-			xpcf_collection_cleanup(&DeviceData->CommonBuffers,
-						PciDtfCleanupCommonBuffer);
-			IoDeleteDevice(DeviceObject);
-		}
+		TRACE_MSG(TRACE_LEVEL_INFO, TRACE_FLAG_DRIVER,
+			  "Device 0x%p added\n", Device);
+		*ppDevice = Device;
 	}
 	return Status;
 }

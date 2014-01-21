@@ -3,7 +3,7 @@
  * Windows kernel-mode driver (WDM)
  * This file declares precompiled header files.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -27,6 +27,7 @@
 #include <wdm.h>
 #include <xpcf/collect.h>
 #include <xpcf/tracemsg.h>
+#include <win/kernel/drvbase.h>
 #include <win/kernel/drvutil.h>
 #include <initguid.h>
 #include <wdmguid.h>

@@ -1,7 +1,7 @@
 @echo off
 
 rem =================================================================
-rem Copyright (C) 2013 Hiromitsu Sakamoto
+rem Copyright (C) 2013-2014 Hiromitsu Sakamoto
 rem PCI Device Test Framework
 rem =================================================================
 
@@ -17,7 +17,7 @@ cmd /c %MODCLEAN% api
 cmd /c %MODCLEAN% testapp
 
 rem ***** Delete release package *****
-if exist pcidtf rd /s/q pcidtf
-if exist pcidtf-sdk rd /s/q pcidtf-sdk
+if exist pcidtf_test rd /s/q pcidtf_test
+if exist pcidtf_sdk rd /s/q pcidtf_sdk
 
 set MODCLEAN=

@@ -1,12 +1,12 @@
 @echo off
 
 rem ===================================================================
-rem Copyright (C) 2013 Hiromitsu Sakamoto
+rem Copyright (C) 2013-2014 Hiromitsu Sakamoto
 rem PCI Device Test Framework
 rem ===================================================================
 
 if "%WDKDIR%" == "" set WDKDIR=C:\WinDDK\7600.16385.1
-set RELDIR=pcidtf
+set RELDIR=pcidtf_test
 set OBJDIR=obj%BUILD_ALT_DIR%\i386
 set WDM_INF=win\wdm\%OBJDIR%\pcidtf_wdm.inf
 set WDM_SYS=win\wdm\%OBJDIR%\pcidtf_wdm.sys

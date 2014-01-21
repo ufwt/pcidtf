@@ -3,7 +3,7 @@
  * Windows kernel-mode driver (KMDF)
  * This file implements I/O queue object functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -421,7 +421,7 @@ NTSTATUS PciDtfDeviceReadWriteDma(IN WDFDEVICE Device, IN WDFREQUEST Request,
 		Status = PciDtfDmaReadWrite(ReqData,
 					    WdfCommonBufferGetAlignedVirtualAddress
 					    (CommonBuffer),
-					    WdfCommonBufferGetLength
+					    (ULONG) WdfCommonBufferGetLength
 					    (CommonBuffer), Read);
 	}
 	__finally {

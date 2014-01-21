@@ -11,12 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="device.c" />
     <ClCompile Include="dma.c" />
     <ClCompile Include="driver.c" />
     <ClCompile Include="ioctl.c" />
-    <ClCompile Include="pnp.c" />
-    <ClCompile Include="power.c" />
-    <ClCompile Include="wmi.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\pcidtf_ioctl.h" />

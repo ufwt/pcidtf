@@ -2,7 +2,7 @@
  * PCI Device Test Framework
  * This file defines version resource information of this product.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -34,7 +34,7 @@
 #define PRODUCT_NAME            "PCI Device Test Framework"
 
 /* Copyright information */
-#define PRODUCT_COPYRIGHT       "(C) 2013 Hiromitsu Sakamoto"
+#define PRODUCT_COPYRIGHT       "(C) 2013-2014 Hiromitsu Sakamoto"
 
 #ifdef WIN32
 #include <win/resource.ver>
