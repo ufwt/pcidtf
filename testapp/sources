@@ -1,23 +1,25 @@
 # ===================================================================
-# Copyright (C) 2013 Hiromitsu Sakamoto
+# Copyright (C) 2013-2014 Hiromitsu Sakamoto
 # PCI Device Test Framework
 # Build script for Windows user-mode test program
 # ===================================================================
 
-!include "..\include\version.inc"
+ROOTDIR = ..
+
+!include "$(ROOTDIR)\include\version.inc"
 
 TARGETNAME  = pcidtf_testapp
 TARGETTYPE  = PROGRAM
 
 UMTYPE  = console
 
-INCLUDES    = ..\include;..\..\miscutil\include
+INCLUDES    = $(ROOTDIR)\include;$(MISCUTIL_DIR)\include
 
 C_DEFINES   = $(C_DEFINES) $(VERINFO)
 
 TARGETLIBS  =\
         ..\api\obj$(BUILD_ALT_DIR)\*\pcidtf.lib\
-        ..\..\miscutil\lib\xpcf\user\obj$(BUILD_ALT_DIR)\*\xpcf.lib
+        $(MISCUTIL_DIR)\lib\user\*\miscutil_xpcf.lib
 
 USE_MSVCRT  = 1
 

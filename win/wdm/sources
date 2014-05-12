@@ -4,20 +4,22 @@
 # Build script for WDM-based kernel-mode driver.
 # ===================================================================
 
-!include "..\..\include\version.inc"
+ROOTDIR = ..\..
+
+!include "$(ROOTDIR)\include\version.inc"
 
 TARGETNAME  = pcidtf_wdm
 TARGETTYPE  = DRIVER
 
-INCLUDES    = ..\include;..\..\include;..\..\..\miscutil\include
+INCLUDES    = ..\include;$(ROOTDIR)\include;$(MISCUTIL_DIR)\include
 
 C_DEFINES   = $(C_DEFINES) $(VERINFO)
 
 TARGETLIBS  =\
         ..\common\obj$(BUILD_ALT_DIR)\*\pcidtf_common.lib\
-        ..\..\..\miscutil\lib\xpcf\win_kernel\obj$(BUILD_ALT_DIR)\*\xpcf.lib\
-        ..\..\..\miscutil\lib\win\drvbase\obj$(BUILD_ALT_DIR)\*\drvbase.lib\
-        ..\..\..\miscutil\lib\win\drvutil\obj$(BUILD_ALT_DIR)\*\drvutil.lib
+        $(MISCUTIL_DIR)\lib\kernel\*\miscutil_xpcf.lib\
+        $(MISCUTIL_DIR)\lib\kernel\*\miscutil_drvbase.lib\
+        $(MISCUTIL_DIR)\lib\kernel\*\miscutil_drvutil.lib
 
 NTTARGETFILE1   = $(OBJ_PATH)\$(O)\$(TARGETNAME).inf
 

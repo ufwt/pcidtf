@@ -3,7 +3,7 @@
  * User-mode Framework Library
  * This file implements DMA buffer management functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -27,7 +27,7 @@
 static PCIDTF_DMA *pcidtf_dev_add_dma(PCIDTF_DEV * dev, int id, int len,
 				      unsigned long long addr);
 
-PCIDTF_API_IMP(PCIDTF_DMA *) pcidtf_dev_alloc_dma(PCIDTF_DEV * dev, int len)
+XPCF_API_IMP(PCIDTF_DMA *) pcidtf_dev_alloc_dma(PCIDTF_DEV * dev, int len)
 {
 	PCIDTF_DMA *dma = NULL;
 	PCIDTF_DMA_INFO req;
@@ -40,7 +40,7 @@ PCIDTF_API_IMP(PCIDTF_DMA *) pcidtf_dev_alloc_dma(PCIDTF_DEV * dev, int len)
 	return dma;
 }
 
-PCIDTF_API_IMP(PCIDTF_DMA *) pcidtf_dev_get_dma(PCIDTF_DEV * dev, int id)
+XPCF_API_IMP(PCIDTF_DMA *) pcidtf_dev_get_dma(PCIDTF_DEV * dev, int id)
 {
 	PCIDTF_DMA *dma;
 	PCIDTF_DMA_INFO req;
@@ -59,30 +59,29 @@ PCIDTF_API_IMP(PCIDTF_DMA *) pcidtf_dev_get_dma(PCIDTF_DEV * dev, int id)
 	return dma;
 }
 
-PCIDTF_API_IMP(int)pcidtf_dma_get_id(PCIDTF_DMA * dma)
+XPCF_API_IMP(int)pcidtf_dma_get_id(PCIDTF_DMA * dma)
 {
 	return dma->id;
 }
 
-PCIDTF_API_IMP(int)pcidtf_dma_get_len(PCIDTF_DMA * dma)
+XPCF_API_IMP(int)pcidtf_dma_get_len(PCIDTF_DMA * dma)
 {
 	return dma->len;
 }
 
-PCIDTF_API_IMP(UINT64) pcidtf_dma_get_addr(PCIDTF_DMA * dma)
+XPCF_API_IMP(UINT64) pcidtf_dma_get_addr(PCIDTF_DMA * dma)
 {
 	return dma->addr;
 }
 
-PCIDTF_API_IMP(void)pcidtf_dma_free(PCIDTF_DMA * dma)
+XPCF_API_IMP(void)pcidtf_dma_free(PCIDTF_DMA * dma)
 {
 	if (xpcf_udev_ioctl(dma->dev->udev, IOCTL_PCIDTF_FREE_DMA,
 			    &dma->id, sizeof(dma->id), NULL) == 0)
 		free(dma);
 }
 
-PCIDTF_API_IMP(int) pcidtf_dma_read(PCIDTF_DMA * dma, int off, void *buf,
-				    int len)
+XPCF_API_IMP(int) pcidtf_dma_read(PCIDTF_DMA * dma, int off, void *buf, int len)
 {
 	PCIDTF_DMA_DATA req;
 
@@ -94,8 +93,8 @@ PCIDTF_API_IMP(int) pcidtf_dma_read(PCIDTF_DMA * dma, int off, void *buf,
 			       sizeof(req), NULL);
 }
 
-PCIDTF_API_IMP(int) pcidtf_dma_write(PCIDTF_DMA * dma, int off, void *buf,
-				     int len)
+XPCF_API_IMP(int) pcidtf_dma_write(PCIDTF_DMA * dma, int off, void *buf,
+				   int len)
 {
 	PCIDTF_DMA_DATA req;
 

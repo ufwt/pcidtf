@@ -64,7 +64,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_X86_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include;..\..\include;..\..\..\miscutil\include;$(WDKDIR)\inc\ddk</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\..\include;$(MISCUTIL_DIR)\include;$(WDKDIR)\inc\ddk</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_X86_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include;..\..\include;..\..\..\miscutil\include;$(WDKDIR)\inc\ddk</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\..\include;$(MISCUTIL_DIR)\include;$(WDKDIR)\inc\ddk</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

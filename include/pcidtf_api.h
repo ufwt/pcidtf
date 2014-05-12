@@ -4,7 +4,7 @@
  * This file defines structure types and function prototypes for
  * application programming interface.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -27,17 +27,6 @@
 
 #include <xpcf/inttypes.h>
 
-#ifdef WIN32
-#ifdef _PCIDTF_DLL
-#define PCIDTF_API_IMP(type) type __stdcall
-#else
-#define PCIDTF_API_IMP(type) __declspec(dllexport) type __stdcall
-#endif
-#else
-#define PCIDTF_API_IMP(type) type
-#endif
-#define PCIDTF_API(type) extern PCIDTF_API_IMP(type)
-
 /* Type definitions */
 typedef struct pcidtf PCIDTF;
 typedef struct pcidtf_dev PCIDTF_DEV;
@@ -49,41 +38,41 @@ typedef struct pcidtf_dma PCIDTF_DMA;
  */
 
 /* Global functions */
-PCIDTF_API(PCIDTF *) pcidtf_init(void);
-PCIDTF_API(void) pcidtf_cleanup(PCIDTF * dtf);
+XPCF_API(PCIDTF *) pcidtf_init(void);
+XPCF_API(void) pcidtf_cleanup(PCIDTF * dtf);
 
 /* Device functions */
-PCIDTF_API(int) pcidtf_get_dev_count(PCIDTF * dtf);
-PCIDTF_API(PCIDTF_DEV *) pcidtf_get_dev(PCIDTF * dtf, int idx);
+XPCF_API(int) pcidtf_get_dev_count(PCIDTF * dtf);
+XPCF_API(PCIDTF_DEV *) pcidtf_get_dev(PCIDTF * dtf, int idx);
 
-PCIDTF_API(UINT8) pcidtf_dev_get_bus(PCIDTF_DEV * dev);
-PCIDTF_API(UINT8) pcidtf_dev_get_devfn(PCIDTF_DEV * dev);
-PCIDTF_API(int) pcidtf_dev_read_cfg(PCIDTF_DEV * dev, int off, int len,
-				    UINT32 * val);
-PCIDTF_API(int) pcidtf_dev_write_cfg(PCIDTF_DEV * dev, int off, int len,
-				     UINT32 val);
+XPCF_API(UINT8) pcidtf_dev_get_bus(PCIDTF_DEV * dev);
+XPCF_API(UINT8) pcidtf_dev_get_devfn(PCIDTF_DEV * dev);
+XPCF_API(int) pcidtf_dev_read_cfg(PCIDTF_DEV * dev, int off, int len,
+				  UINT32 * val);
+XPCF_API(int) pcidtf_dev_write_cfg(PCIDTF_DEV * dev, int off, int len,
+				   UINT32 val);
 
 /* I/O register map functions */
-PCIDTF_API(int) pcidtf_dev_get_iomap_count(PCIDTF_DEV * dev);
-PCIDTF_API(PCIDTF_IOMAP *) pcidtf_dev_get_iomap(PCIDTF_DEV * dev, int bar);
-PCIDTF_API(int) pcidtf_iomap_get_bar(PCIDTF_IOMAP * iomap);
-PCIDTF_API(int) pcidtf_iomap_get_len(PCIDTF_IOMAP * iomap);
+XPCF_API(int) pcidtf_dev_get_iomap_count(PCIDTF_DEV * dev);
+XPCF_API(PCIDTF_IOMAP *) pcidtf_dev_get_iomap(PCIDTF_DEV * dev, int bar);
+XPCF_API(int) pcidtf_iomap_get_bar(PCIDTF_IOMAP * iomap);
+XPCF_API(int) pcidtf_iomap_get_len(PCIDTF_IOMAP * iomap);
 
-PCIDTF_API(UINT64) pcidtf_iomap_get_addr(PCIDTF_IOMAP * iomap);
-PCIDTF_API(int) pcidtf_iomap_read_reg(PCIDTF_IOMAP * iomap, int off, int len,
-				      UINT64 * val);
-PCIDTF_API(int) pcidtf_iomap_write_reg(PCIDTF_IOMAP * iomap, int off, int len,
-				       UINT64 val);
+XPCF_API(UINT64) pcidtf_iomap_get_addr(PCIDTF_IOMAP * iomap);
+XPCF_API(int) pcidtf_iomap_read_reg(PCIDTF_IOMAP * iomap, int off, int len,
+				    UINT64 * val);
+XPCF_API(int) pcidtf_iomap_write_reg(PCIDTF_IOMAP * iomap, int off, int len,
+				     UINT64 val);
 
 /* DMA buffer functions */
-PCIDTF_API(PCIDTF_DMA *) pcidtf_dev_alloc_dma(PCIDTF_DEV * dev, int len);
-PCIDTF_API(PCIDTF_DMA *) pcidtf_dev_get_dma(PCIDTF_DEV * dev, int id);
-PCIDTF_API(int) pcidtf_dma_get_id(PCIDTF_DMA * dma);
-PCIDTF_API(int) pcidtf_dma_get_len(PCIDTF_DMA * dma);
+XPCF_API(PCIDTF_DMA *) pcidtf_dev_alloc_dma(PCIDTF_DEV * dev, int len);
+XPCF_API(PCIDTF_DMA *) pcidtf_dev_get_dma(PCIDTF_DEV * dev, int id);
+XPCF_API(int) pcidtf_dma_get_id(PCIDTF_DMA * dma);
+XPCF_API(int) pcidtf_dma_get_len(PCIDTF_DMA * dma);
 
-PCIDTF_API(UINT64) pcidtf_dma_get_addr(PCIDTF_DMA * dma);
-PCIDTF_API(void) pcidtf_dma_free(PCIDTF_DMA * dma);
-PCIDTF_API(int) pcidtf_dma_read(PCIDTF_DMA * dma, int off, void *buf, int len);
-PCIDTF_API(int) pcidtf_dma_write(PCIDTF_DMA * dma, int off, void *buf, int len);
+XPCF_API(UINT64) pcidtf_dma_get_addr(PCIDTF_DMA * dma);
+XPCF_API(void) pcidtf_dma_free(PCIDTF_DMA * dma);
+XPCF_API(int) pcidtf_dma_read(PCIDTF_DMA * dma, int off, void *buf, int len);
+XPCF_API(int) pcidtf_dma_write(PCIDTF_DMA * dma, int off, void *buf, int len);
 
 #endif

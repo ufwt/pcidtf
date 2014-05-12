@@ -1,5 +1,5 @@
 ; ===================================================================
-; Copyright (C) 2013 Hiromitsu Sakamoto
+; Copyright (C) 2013-2014 Hiromitsu Sakamoto
 ; PCI Device Test Framework
 ; INF File for WDM-based Driver
 ; ===================================================================
@@ -17,6 +17,9 @@
 
 [SourceDisksFiles]
  pcidtf_wdm.sys = 1
+ miscutil_xpcf.sys = 1
+ miscutil_drvutil.sys = 1
+ miscutil_drvbase.sys = 1
 
 [SourceDisksNames]
  1 = %DISKNAME%
@@ -47,6 +50,9 @@
 
 [PCIDTF.CopyFiles]
  pcidtf_wdm.sys
+ miscutil_xpcf.sys
+ miscutil_drvutil.sys
+ miscutil_drvbase.sys
 
 [PCIDTF.NT.Services]
  AddService = pcidtf_wdm,0x00000002,PCIDTF.AddService

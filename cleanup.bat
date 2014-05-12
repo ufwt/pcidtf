@@ -5,7 +5,7 @@ rem Copyright (C) 2013-2014 Hiromitsu Sakamoto
 rem PCI Device Test Framework
 rem =================================================================
 
-set MODCLEAN=..\miscutil\win\modclean.bat
+set MODCLEAN=%MISCUTIL_DIR%\etc\modclean.bat
 
 rem ***** Delete intermediate file *****
 cmd /c %MODCLEAN% .

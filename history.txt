@@ -1,0 +1,20 @@
+PCI Device Test Framework (pcidtf) - Revision History
+=====================================================
+
+Version 1.0.0.2 : 2014/05/12
+----------------------------
+- Changed to use XPCF_API macro in declaration of API functions.
+- Changed to use XPCF_CB macro in definition of callback functions.
+- Modified INF files to include MISCUTIL driver files.
+- Include driver files and symbol files in SDK package.
+
+Version 1.0.0.1 : 2014/01/21
+----------------------------
+- Updated WDM-based driver to use base driver utility library.
+
+Version 1.0.0 : 2013/12/25
+--------------------------
+- Preliminary version.
+
+----
+Copyright (C) 2013-2014 Hiromitsu Sakamoto

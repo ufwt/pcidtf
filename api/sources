@@ -1,24 +1,26 @@
 # ===================================================================
-# Copyright (C) 2013 Hiromitsu Sakamoto
+# Copyright (C) 2013-2014 Hiromitsu Sakamoto
 # PCI Device Test Framework
 # Build script for Windows user-mode dynamic link library.
 # ===================================================================
 
-!include "..\include\version.inc"
+ROOTDIR = ..
+
+!include "$(ROOTDIR)\include\version.inc"
 
 TARGETNAME  = pcidtf
 TARGETTYPE  = DYNLINK
 
 DLLDEF      = pcidtf.def
 
-INCLUDES    = ..\include;..\win\include;..\..\miscutil\include
+INCLUDES    = $(ROOTDIR)\include;$(ROOTDIR)\win\include;$(MISCUTIL_DIR)\include
 
-C_DEFINES   = $(C_DEFINES) $(VERINFO)
+C_DEFINES   = $(C_DEFINES) $(VERINFO) -DXPCF_EXPORTS
 
 TARGETLIBS  =\
         $(SDK_LIB_PATH)\kernel32.lib\
         $(SDK_LIB_PATH)\setupapi.lib\
-        ..\..\miscutil\lib\xpcf\user\obj$(BUILD_ALT_DIR)\*\xpcf.lib
+        $(MISCUTIL_DIR)\lib\user\*\miscutil_xpcf.lib
 
 USE_MSVCRT  = 1
 

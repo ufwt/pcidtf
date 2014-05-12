@@ -1,5 +1,5 @@
 ; ===================================================================
-; Copyright (C) 2013 Hiromitsu Sakamoto
+; Copyright (C) 2013-2014 Hiromitsu Sakamoto
 ; PCI Device Test Framework
 ; INF File for KMDF-based Driver
 ; ===================================================================
@@ -18,6 +18,8 @@
 
 [SourceDisksFiles]
  pcidtf_kmdf.sys = 1
+ miscutil_xpcf.sys = 1
+ miscutil_drvutil.sys = 1
  WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll = 1
 
 [SourceDisksNames]
@@ -49,6 +51,8 @@
 
 [PCIDTF.CopyFiles]
  pcidtf_kmdf.sys
+ miscutil_xpcf.sys
+ miscutil_drvutil.sys
 
 [PCIDTF.NT.Services]
  AddService = pcidtf_kmdf,0x00000002,PCIDTF.AddService

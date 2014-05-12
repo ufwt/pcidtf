@@ -72,7 +72,7 @@ NTSTATUS PciDtfDmaCreate(IN PDEVICE_DATA DeviceData, IN ULONG Length,
 	return Status;
 }
 
-void PciDtfCleanupCommonBuffer(XPCF_COLLECTION * col, void *item)
+XPCF_CB(void)PciDtfCleanupCommonBuffer(XPCF_COLLECTION * col, void *item)
 {
 	PDEVICE_DATA DeviceData = (PDEVICE_DATA) col->ctx;
 	PCOMMON_BUFFER_DATA BufData = (PCOMMON_BUFFER_DATA) item;

@@ -3,7 +3,7 @@
  * User-mode Framework Library
  * This file implements global and device level API functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,7 +35,7 @@
 static void pcidtf_dev_free(PCIDTF_DEV * dev);
 static int pcidtf_enum(PCIDTF * data);
 
-PCIDTF_API_IMP(PCIDTF *) pcidtf_init(void)
+XPCF_API_IMP(PCIDTF *) pcidtf_init(void)
 {
 	PCIDTF *dtf;
 
@@ -50,7 +50,7 @@ PCIDTF_API_IMP(PCIDTF *) pcidtf_init(void)
 	return dtf;
 }
 
-PCIDTF_API_IMP(void)pcidtf_cleanup(PCIDTF * dtf)
+XPCF_API_IMP(void)pcidtf_cleanup(PCIDTF * dtf)
 {
 	PCIDTF_DEV *dev;
 	int i;
@@ -63,12 +63,12 @@ PCIDTF_API_IMP(void)pcidtf_cleanup(PCIDTF * dtf)
 	free(dtf);
 }
 
-PCIDTF_API_IMP(int) pcidtf_get_dev_count(PCIDTF * dtf)
+XPCF_API_IMP(int) pcidtf_get_dev_count(PCIDTF * dtf)
 {
 	return dtf->count;
 }
 
-PCIDTF_API_IMP(PCIDTF_DEV *) pcidtf_get_dev(PCIDTF * dtf, int idx)
+XPCF_API_IMP(PCIDTF_DEV *) pcidtf_get_dev(PCIDTF * dtf, int idx)
 {
 	PCIDTF_DEV *dev = NULL;
 
@@ -77,18 +77,18 @@ PCIDTF_API_IMP(PCIDTF_DEV *) pcidtf_get_dev(PCIDTF * dtf, int idx)
 	return dev;
 }
 
-PCIDTF_API_IMP(UINT8) pcidtf_dev_get_bus(PCIDTF_DEV * dev)
+XPCF_API_IMP(UINT8) pcidtf_dev_get_bus(PCIDTF_DEV * dev)
 {
 	return dev->bus;
 }
 
-PCIDTF_API_IMP(UINT8) pcidtf_dev_get_devfn(PCIDTF_DEV * dev)
+XPCF_API_IMP(UINT8) pcidtf_dev_get_devfn(PCIDTF_DEV * dev)
 {
 	return dev->devfn;
 }
 
-PCIDTF_API_IMP(int)pcidtf_dev_read_cfg(PCIDTF_DEV * dev, int off, int len,
-				       UINT32 * val)
+XPCF_API_IMP(int)pcidtf_dev_read_cfg(PCIDTF_DEV * dev, int off, int len,
+				     UINT32 * val)
 {
 	PCIDTF_CFG_DATA data;
 	int ret;
@@ -103,8 +103,8 @@ PCIDTF_API_IMP(int)pcidtf_dev_read_cfg(PCIDTF_DEV * dev, int off, int len,
 	return 0;
 }
 
-PCIDTF_API_IMP(int)pcidtf_dev_write_cfg(PCIDTF_DEV * dev, int off, int len,
-					UINT32 val)
+XPCF_API_IMP(int)pcidtf_dev_write_cfg(PCIDTF_DEV * dev, int off, int len,
+				      UINT32 val)
 {
 	PCIDTF_CFG_DATA data;
 
@@ -153,17 +153,19 @@ static void pcidtf_dev_free(PCIDTF_DEV * dev)
 
 #ifdef WIN32
 static void enum_handler(void *ctx,
-			 PSP_DEVICE_INTERFACE_DETAIL_DATA pDevIntfData,
-			 PSP_DEVINFO_DATA pDevInfoData)
+			 HDEVINFO hDevInfo,
+			 PSP_DEVINFO_DATA pDevInfoData,
+			 PSP_DEVICE_INTERFACE_DETAIL_DATA pDevIntfDetailData)
 {
 	PCIDTF *data = (PCIDTF *) ctx;
 	XPCF_UDEV *udev;
 	PCIDTF_DEV_INFO req;
 	PCIDTF_DEV *dev;
 
+	UNREFERENCED_PARAMETER(hDevInfo);
 	UNREFERENCED_PARAMETER(pDevInfoData);
 
-	if (xpcf_udev_open(pDevIntfData->DevicePath, &udev) == 0) {
+	if (xpcf_udev_open(pDevIntfDetailData->DevicePath, &udev) == 0) {
 		if (xpcf_udev_ioctl(udev, IOCTL_PCIDTF_GET_INFO,
 				    &req, sizeof(req), NULL)) {
 			xpcf_udev_close(udev);

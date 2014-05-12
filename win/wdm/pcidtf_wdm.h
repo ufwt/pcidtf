@@ -63,7 +63,8 @@ BASE_FILE_IOCTL PciDtfFileIoctl;
 
 // dma.c
 NTSTATUS PciDtfDmaCreate(IN PDEVICE_DATA DeviceData, IN ULONG Length,
-			 OUT PCOMMON_BUFFER_DATA * ppBufData, OUT int *id);
-void PciDtfCleanupCommonBuffer(XPCF_COLLECTION * col, void *item);
+			 OUT PCOMMON_BUFFER_DATA * ppCommonBufferData,
+			 OUT int *id);
+XPCF_COLLECTION_REMOVE_HANDLER PciDtfCleanupCommonBuffer;
 
 #endif

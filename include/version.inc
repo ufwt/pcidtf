@@ -7,7 +7,7 @@
 MAJOR       = 1
 MINOR       = 0
 BUILD       = 0
-BUILD_QFE   = 1
+BUILD_QFE   = 2
 
 VERINFO=\
     -DPRODUCT_MAJOR_VERSION=$(MAJOR)\

@@ -7,7 +7,9 @@ rem ===================================================================
 
 if "%WDKDIR%" == "" set WDKDIR=C:\WinDDK\7600.16385.1
 set RELDIR=pcidtf_test
-set OBJDIR=obj%BUILD_ALT_DIR%\i386
+set ARCH=i386
+if "%AMD64%" == "1" set ARCH=amd64
+set OBJDIR=obj%BUILD_ALT_DIR%\%ARCH%
 set WDM_INF=win\wdm\%OBJDIR%\pcidtf_wdm.inf
 set WDM_SYS=win\wdm\%OBJDIR%\pcidtf_wdm.sys
 set KMDF_INF=win\kmdf\%OBJDIR%\pcidtf_kmdf.inf
@@ -27,12 +29,18 @@ if exist %KMDF_SYS% copy %KMDF_SYS% %RELDIR%
 if exist %DLL% copy %DLL% %RELDIR%
 if exist %TESTAPP% copy %TESTAPP% %RELDIR%
 
+copy %MISCUTIL_DIR%\bin\%ARCH%\miscutil_xpcf.dll %RELDIR%
+copy %MISCUTIL_DIR%\sys\%ARCH%\miscutil_xpcf.sys %RELDIR%
+copy %MISCUTIL_DIR%\sys\%ARCH%\miscutil_drvbase.sys %RELDIR%
+copy %MISCUTIL_DIR%\sys\%ARCH%\miscutil_drvutil.sys %RELDIR%
+
 copy %WDKCOINST% %RELDIR%
 
 copy win\test %RELDIR%
 
 :end
 set RELDIR=
+set ARCH=
 set OBJDIR=
 set WDM_INF=
 set WDM_SYS=

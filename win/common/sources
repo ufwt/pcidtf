@@ -1,13 +1,15 @@
 # ===================================================================
-# Copyright (C) 2013 Hiromitsu Sakamoto
+# Copyright (C) 2013-2014 Hiromitsu Sakamoto
 # PCI Device Test Framework
 # Build script for kernel-mode common library.
 # ===================================================================
 
+ROOTDIR = ..\..
+
 TARGETNAME  = pcidtf_common
 TARGETTYPE  = DRIVER_LIBRARY
 
-INCLUDES    = ..\include;..\..\include;..\..\..\miscutil\include
+INCLUDES    = ..\include;$(ROOTDIR)\include;$(MISCUTIL_DIR)\include
 
 SOURCES = common.c
 

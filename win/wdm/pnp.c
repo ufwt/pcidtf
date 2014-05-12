@@ -52,16 +52,16 @@ NTSTATUS DriverDispatchPnp(__in PDEVICE_OBJECT DeviceObject, __inout PIRP Irp)
 	case IRP_MN_REMOVE_DEVICE:
 		IoSetDeviceInterfaceState(&DeviceData->SymbolicLinkName, FALSE);
 		if (DeviceData->BusIntf.Context)
-			DeviceData->BusIntf.
-			    InterfaceDereference(DeviceData->BusIntf.Context);
+			DeviceData->BusIntf.InterfaceDereference(DeviceData->
+								 BusIntf.
+								 Context);
 		for (Index = 0; Index < DeviceData->RegSpaceCount; Index++)
 			PciDtfRegSpaceCleanup(DeviceData->RegSpaceData + Index);
 		xpcf_collection_cleanup(&DeviceData->CommonBuffers,
 					PciDtfCleanupCommonBuffer);
 		if (DeviceData->DmaAdapter)
-			DeviceData->DmaAdapter->
-			    DmaOperations->PutDmaAdapter(DeviceData->
-							 DmaAdapter);
+			DeviceData->DmaAdapter->DmaOperations->
+			    PutDmaAdapter(DeviceData->DmaAdapter);
 		IoSkipCurrentIrpStackLocation(Irp);
 		Status = IoCallDriver(DeviceData->NextDeviceObject, Irp);
 		IoDetachDevice(DeviceData->NextDeviceObject);
@@ -92,16 +92,16 @@ NTSTATUS PciDtfStartDevice(IN PDEVICE_DATA DeviceData,
 
 	__try {
 		ResourceList =
-		    IrpStack->Parameters.
-		    StartDevice.AllocatedResourcesTranslated;
+		    IrpStack->Parameters.StartDevice.
+		    AllocatedResourcesTranslated;
 		if (ResourceList->Count == 0) {
 			Status = STATUS_INSUFFICIENT_RESOURCES;
 			__leave;
 		}
 		Count = ResourceList->List[0].PartialResourceList.Count;
 		ResourceDesc =
-		    ResourceList->List[0].
-		    PartialResourceList.PartialDescriptors;
+		    ResourceList->List[0].PartialResourceList.
+		    PartialDescriptors;
 		for (Index = 0; Index < Count; Index++, ResourceDesc++) {
 			switch (ResourceDesc->Type) {
 

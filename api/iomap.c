@@ -3,7 +3,7 @@
  * User-mode Framework Library
  * This file implements I/O register access functions.
  *
- * Copyright (C) 2013 Hiromitsu Sakamoto
+ * Copyright (C) 2013-2014 Hiromitsu Sakamoto
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -23,35 +23,35 @@
 
 #include "pcidtf_def.h"
 
-PCIDTF_API_IMP(int) pcidtf_dev_get_iomap_count(PCIDTF_DEV * dev)
+XPCF_API_IMP(int) pcidtf_dev_get_iomap_count(PCIDTF_DEV * dev)
 {
 	return dev->iomap_count;
 }
 
-PCIDTF_API_IMP(PCIDTF_IOMAP *) pcidtf_dev_get_iomap(PCIDTF_DEV * dev, int bar)
+XPCF_API_IMP(PCIDTF_IOMAP *) pcidtf_dev_get_iomap(PCIDTF_DEV * dev, int bar)
 {
 	if (bar < 0 || bar >= dev->iomap_count)
 		return NULL;
 	return dev->iomap[bar];
 }
 
-PCIDTF_API_IMP(int)pcidtf_iomap_get_bar(PCIDTF_IOMAP * iomap)
+XPCF_API_IMP(int)pcidtf_iomap_get_bar(PCIDTF_IOMAP * iomap)
 {
 	return iomap->bar;
 }
 
-PCIDTF_API_IMP(int)pcidtf_iomap_get_len(PCIDTF_IOMAP * iomap)
+XPCF_API_IMP(int)pcidtf_iomap_get_len(PCIDTF_IOMAP * iomap)
 {
 	return iomap->len;
 }
 
-PCIDTF_API_IMP(UINT64) pcidtf_iomap_get_addr(PCIDTF_IOMAP * iomap)
+XPCF_API_IMP(UINT64) pcidtf_iomap_get_addr(PCIDTF_IOMAP * iomap)
 {
 	return iomap->addr;
 }
 
-PCIDTF_API_IMP(int)pcidtf_iomap_read_reg(PCIDTF_IOMAP * iomap, int off, int len,
-					 UINT64 * val)
+XPCF_API_IMP(int)pcidtf_iomap_read_reg(PCIDTF_IOMAP * iomap, int off, int len,
+				       UINT64 * val)
 {
 	PCIDTF_REG_DATA data;
 	int ret;
@@ -68,8 +68,8 @@ PCIDTF_API_IMP(int)pcidtf_iomap_read_reg(PCIDTF_IOMAP * iomap, int off, int len,
 	return 0;
 }
 
-PCIDTF_API_IMP(int)pcidtf_iomap_write_reg(PCIDTF_IOMAP * iomap, int off,
-					  int len, UINT64 val)
+XPCF_API_IMP(int)pcidtf_iomap_write_reg(PCIDTF_IOMAP * iomap, int off,
+					int len, UINT64 val)
 {
 	PCIDTF_REG_DATA data;
 

@@ -4,7 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testapp", "testapp\testapp.vcxproj", "{C8B802AD-A1F4-441E-B946-E91C1A37BD8C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8E704C15-7C19-4038-B228-89871D78A674} = {8E704C15-7C19-4038-B228-89871D78A674}
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85} = {2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "win\common\common.vcxproj", "{0F97FA65-DBC7-47FF-A9E1-7A982E9452FE}"
@@ -14,11 +13,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wdm", "win\wdm\wdm.vcxproj", "{663D7F5D-4BB3-4C1A-A4A0-7EBE46A1D02A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api", "api\api.vcxproj", "{8E704C15-7C19-4038-B228-89871D78A674}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85} = {2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xpcf_user", "..\miscutil\lib\xpcf\user\xpcf_user.vcxproj", "{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,10 +40,6 @@ Global
 		{8E704C15-7C19-4038-B228-89871D78A674}.Debug|Win32.Build.0 = Debug|Win32
 		{8E704C15-7C19-4038-B228-89871D78A674}.Release|Win32.ActiveCfg = Release|Win32
 		{8E704C15-7C19-4038-B228-89871D78A674}.Release|Win32.Build.0 = Release|Win32
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}.Debug|Win32.Build.0 = Debug|Win32
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}.Release|Win32.ActiveCfg = Release|Win32
-		{2B5481B9-8CE3-4793-8C8A-E2FDAD8A4B85}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
