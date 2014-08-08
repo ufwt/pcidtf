@@ -1,6 +1,11 @@
 PCI Device Test Framework (pcidtf) - Revision History
 =====================================================
 
+Version 1.0.0.3 : 2014/08/08
+----------------------------
+- Updated build environment of Windows user-mode modules to Visual
+  Studio 2013.
+
 Version 1.0.0.2 : 2014/05/12
 ----------------------------
 - Changed to use XPCF_API macro in declaration of API functions.

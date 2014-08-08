@@ -36,7 +36,7 @@ PCIDTF can be used for the following platforms:
 - Windows
    * Kernel-mode drivers (WDM and KMDF) can be built by Windows Driver
      Kit for Windows 7.
-   * User-mode DLL can be built by Visual Studio 2012 or Windows
+   * User-mode DLL can be built by Visual Studio 2013 or Windows
      Driver Kit for Windows 7.
 
 ----
